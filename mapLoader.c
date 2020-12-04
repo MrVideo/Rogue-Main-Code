@@ -4,10 +4,12 @@
 
 int main()
 {
+    //Dichiarazione variabili
     FILE *map = fopen("map1.txt", "r");
     int dim, i, j, k = 0;
     char currentLine[100], mapMatrix[100][100];
 
+    //Inizializzazione array e matrice
     for(i = 0; i < 100; i++)
     {
         *(currentLine + i) = '\0';
@@ -16,19 +18,23 @@ int main()
             mapMatrix[i][j] = '\0';
     }
 
+    //Gestione errore di assenza file
     if(map == NULL)
     {
         printf("File error: file doesn't exist\n");
         return 0;
     }
 
+    //Assegnamento dimensione mappa
     fscanf(map, "%d", &dim);
 
+    //Torna all'inizio e si sposta di 3 caratteri in avanti per saltare la dimensione
     fseek(map, sizeof(char) * 3, SEEK_SET);
 
+    //Stampa la mappa in valori numerici se non è la fine del file
     for(i = 0; i < dim * 2; i++)
     {   
-        if(!feof(map))
+        if(!feof(map)) //Controlla se è alla fine del file
         {
             fgets(currentLine, dim * 2 + 1, map);
 
@@ -49,9 +55,9 @@ int main()
     }
     //Debug end
 
-    printf("\n");
+    printf("\n"); //A capo per la formattazione
 
-    fclose(map);
+    fclose(map); //Chiusura file
 
-    return 0;
+    return 0; //Termine programma
 }
