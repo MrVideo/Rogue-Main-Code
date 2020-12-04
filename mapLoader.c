@@ -40,7 +40,8 @@ int main()
 
             for(j = 0; j < dim * 2 + 1; j++)
             {
-                printf("%c", *(currentLine + j));
+                for(k = 0; k < (dim * 2 + 1) && (currentLine[j] != ' '); k++)
+                    mapMatrix[i][k] = currentLine[j];
             }
         }
     }
