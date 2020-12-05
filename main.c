@@ -52,6 +52,9 @@ void loadMap(int **mapMatrix, int *size, char *filename)
     int i, j, spaceCounter = 0;
 
     fscanf(map, "%d", size);
+    //Debug
+    printf("\nDimensione: %d\n", *size);
+    //Debug end
 
     fseek(map, sizeof(char) * 3, SEEK_SET);
 
