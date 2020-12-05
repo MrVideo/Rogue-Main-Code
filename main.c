@@ -49,7 +49,7 @@ void loadMap(int **mapMatrix, int *size, char *filename)
 {
     FILE *map = fopen(filename, "r");
     char currentLine[100];
-    int i, j;
+    int i, j, spaceCounter = 0;
 
     fscanf(map, "%d", size);
 
@@ -66,13 +66,14 @@ void loadMap(int **mapMatrix, int *size, char *filename)
             {
                 if(currentLine[j] != ' ')
                 {
-                    mapMatrix[i][j] = (int)currentLine[j];
+                    mapMatrix[i][spaceCounter] = (int)currentLine[j];
+                    spaceCounter++;
                     //Debug
                     printf("%c ", currentLine[j]);
                     //Debug end
                 }
             }
-
+            spaceCounter = 0;
             //Debug
             printf("\n");
             //Debug end
