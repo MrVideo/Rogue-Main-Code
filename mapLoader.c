@@ -6,7 +6,7 @@ int main()
 {
     //Dichiarazione variabili
     FILE *map = fopen("map1.txt", "r");
-    int dim, i, j, k = 0;
+    int dim, i, j, k;
     char currentLine[100], mapMatrix[100][100];
 
     //Inizializzazione array e matrice
@@ -32,31 +32,22 @@ int main()
     fseek(map, sizeof(char) * 3, SEEK_SET);
 
     //Stampa la mappa in valori numerici se non è la fine del file
-    for(i = 0; i < dim * 2; i++)
+    for(i = 0; i < dim; i++)
     {   
         if(!feof(map)) //Controlla se è alla fine del file
         {
-            fgets(currentLine, dim * 2 + 1, map);
-
-            for(j = 0; j < dim * 2 + 1; j++)
+            fgets(currentLine, dim * 2, map);
+            fseek(map, sizeof(char) * 2, SEEK_CUR);
+            
+            for(j = 0; j < dim * 2; j++)
             {
-                for(k = 0; k < (dim * 2 + 1) && (currentLine[j] != ' '); k++)
-                    mapMatrix[i][k] = currentLine[j];
+                if(currentLine[j] != ' ')
+                {   
+                    mapMatrix[i][j] = currentLine[j];
+                }
             }
         }
     }
-
-    //Debug
-    for(i = 0; i < dim * 2 + 1; i++)
-    {
-        for(j = 0; j < dim * 2 + 1; j++)
-            printf("%c", mapMatrix[i][j]);
-        
-        printf("\n");
-    }
-    //Debug end
-
-    printf("\n"); //A capo per la formattazione
 
     fclose(map); //Chiusura file
 
