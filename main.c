@@ -22,7 +22,7 @@ int main()
         printf("\n");
     }
 
-    printf("\nPrimo elemento della matrice: %d\n", mapMatrix[0][0]);
+    //printf("\nPrimo elemento della matrice: %d\n", mapMatrix[0][0]);
     //Debug end
 
     sizePtr = &size;
@@ -41,7 +41,7 @@ int main()
         printf("\n");
     }
 
-    printf("\nPrimo elemento della matrice: %d\n", mapMatrix[0][0]);
+    //printf("\nPrimo elemento della matrice: %d\n", mapMatrix[0][0]);
     //Debug end
 }
 
@@ -52,33 +52,51 @@ void loadMap(int **mapMatrix, int *size, char *filename)
     int i, j, spaceCounter = 0;
 
     fscanf(map, "%d", size);
-    //Debug
+    
     printf("\nDimensione: %d\n", *size);
-    //Debug end
 
-    fseek(map, sizeof(char) * 3, SEEK_SET);
+    rewind(map);
 
+    if(*size < 10)
+        fseek(map, sizeof(char) * 2, SEEK_SET);
+    if(*size >= 10)
+        fseek(map, sizeof(char) * 3, SEEK_SET);
+    
     for(i = 0; i < *size; i++)
     {   
         if(!feof(map))
         {
-            fgets(currentLine, *size * 2, map);
-            fseek(map, sizeof(char) * 2, SEEK_CUR);
+            fgets(currentLine, *size * 2 + 1, map);
+
+            //Debug
+            int k;
+            printf("\n");
+            for(k = 0; k < *size * 2 + 1; k++)
+                printf("%c", currentLine[k]);
+            printf("\n");
+            //Debug end
+            
+            /*Debug
+            printf("\n%ld\n", ftell(map));
+            *///Debug end
             
             for(j = 0; j < *size * 2; j++)
             {
-                if(currentLine[j] != ' ')
+                if(currentLine[j] != ' ' && currentLine[j] != '\n' && currentLine[j] != '\0')
                 {
                     mapMatrix[i][spaceCounter] = (int)currentLine[j];
                     spaceCounter++;
-                    //Debug
+                    
+                    /*Debug
                     printf("%c ", currentLine[j]);
-                    //Debug end
+                    printf("%ld ", ftell(map));
+                    //Debug end*/
                 }
             }
             spaceCounter = 0;
+            
             //Debug
-            printf("\n");
+            //printf("\n");
             //Debug end
         }
     }
