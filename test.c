@@ -2,66 +2,32 @@
 #include <stdlib.h>
 #include <string.h>
 
+void mapLoader(char **mapMatrix, int *size, char *filename);
+
 int main()
 {
-    char filename[20], currentLine[100], **mapMatrix;
-    int mapSize, i, j, spaceCounter = 0;
+    int *size, i, j, mapSize;
+    char filename[20], **mapMatrix, map[100][100];
 
     mapMatrix = calloc(100, sizeof(int));
     for(i = 0; i < 100; i++)
-        mapMatrix[i] = calloc(100, sizeof(int));
-    for(i = 0; i < 100; i++)
-        for(j = 0; j < 100; j++)
-            **(mapMatrix + j) = '\0';
-    
+        mapMatrix[i] = calloc(1, sizeof(int));
+
+    size = &mapSize;
+    *mapMatrix = &map[0][0];
+
     system("clear");
 
-    printf("Inserisci il nome del file da aprire: ");
+    printf("Inserisci il nome della mappa: ");
     scanf("%s", filename);
     
-    FILE *map = fopen(filename, "r");
+    mapLoader(mapMatrix, size, filename);
 
-    if(map == NULL)
-    {
-        printf("\nImpossibile aprire il file.\n");
-        return 0;
-    }
-
-    fscanf(map, "%d", &mapSize);
-
-    printf("\nLa dimensione è: %d\n", mapSize);
-
-    for(i = 0; i < mapSize; i++)
-    {
-        if(!feof(map))
-        {
-            fseek(map, 2 * mapSize * sizeof(char) * (i + 1), SEEK_SET);
-
-            fscanf(map, "%s", currentLine);
-
-            for(j = 0; j < mapSize * 2; j++)
-            {
-                if(currentLine[j] != ' ' || currentLine[j] != '\n')
-                {
-                    mapMatrix[i][spaceCounter] = currentLine[j];
-                    spaceCounter++;
-
-                    printf("\nPosizione attuale del cursore: %ld", ftell(map));
-                    printf("\nCarattere in currentLine[%d]: %c\n", j, currentLine[j]);
-                    
-
-                }
-            }
-
-            spaceCounter = 0;
-        }
-    }
-
-    printf("\nLa mappa numerica è:\n");
+    printf("\nLa mappa è:\n");
     
-    for(i = 0; i < mapSize; i++)
+    for(i = 0; i < *size; i++)
     {
-        for(j = 0; j < mapSize * 2; j++)
+        for(j = 0; j < *size; j++)
         {
             printf("%d ", mapMatrix[i][j]);
         }
@@ -69,7 +35,36 @@ int main()
         printf("\n");
     }
 
-    fclose(map);
-
     return 0;
+}
+
+void mapLoader(char **mapMatrix, int *size, char *filename)
+{
+    FILE *mapFile = fopen(filename, "r");
+    int i, j;
+
+    printf("\nPosizione: %ld\n", ftell(mapFile));
+    
+    fscanf(mapFile, "%d", size);
+    printf("\nLa dimensione della mappa è %d", *size);
+
+    printf("\nPosizione: %ld\n", ftell(mapFile));
+
+    if(*size < 10)
+        fseek(mapFile, sizeof(char), SEEK_CUR);
+    else if(*size >= 10)
+        fseek(mapFile, sizeof(char) * 2, SEEK_CUR);
+
+    for(i = 0; i < *size; i++)
+    {
+        for(j = 0; j < *size; j++)
+        {
+            fscanf(mapFile, "%c%*c", *(mapMatrix + j));
+
+            printf("\nmapMatrix[%d][%d] = %d", i, j, mapMatrix[i][j]);
+            printf("\nPosizione: %ld", ftell(mapFile));
+            
+            //fseek(mapFile, sizeof(char), SEEK_CUR);
+        }
+    }
 }
